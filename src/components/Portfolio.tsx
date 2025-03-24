@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import ProjectCard from './ProjectCard';
 import axios from 'axios';
+import { BASE_URL } from '@/app/baseUrl';
 
 interface Project {
   id: number; // Ensure this matches the backend's `id` type
@@ -19,7 +20,7 @@ const Portfolio: React.FC = () => {
 useEffect(() => {
   const fetchProjects = async () => {
     try {
-      const response = await axios.get('/api/projects');
+      const response = await axios.get(`${BASE_URL}/api/projects`);
       console.log('Fetched projects:', response.data.data); // Debugging log
       const publishedProjects = response.data.data.filter(
         (project: Project) => project.published

@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import axios from 'axios';
+import { BASE_URL } from '@/app/baseUrl';
 
 interface FormData {
   name: string;
@@ -92,7 +93,7 @@ export default function ContactForm() {
     
     try {
       // Send data to backend API
-      const response = await axios.post('/api/inquiries', formData);
+      const response = await axios.post(`${BASE_URL}/api/inquiries`, formData);
       
       // Check if we're in demo mode
       if (response.data.mode) {

@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { BASE_URL } from '@/app/baseUrl';
 
 interface Project {
   _id: string; // Update to match MongoDB's _id field
@@ -32,7 +33,7 @@ const AdminProjectsPage: React.FC = () => {
   const fetchProjects = async () => {
     try {
       setIsLoading(true);
-      const response = await axios.get('/api/projects');
+      const response = await axios.get(`${BASE_URL}/api/projects`);
       setProjects(response.data.data);
       setError(null);
     } catch (err) {
@@ -46,7 +47,7 @@ const AdminProjectsPage: React.FC = () => {
   // Add a new project
   const handleAddProject = async () => {
     try {
-      const response = await axios.post('/api/projects', newProject);
+      const response = await axios.post(`${BASE_URL}/api/projects`, newProject);
       setProjects([...projects, response.data.data]);
       setNewProject({
         _id: '',
@@ -68,7 +69,7 @@ const AdminProjectsPage: React.FC = () => {
   const handleDeleteProject = async (_id: string) => {
     if (window.confirm('Are you sure you want to delete this project?')) {
       try {
-        await axios.delete(`/api/projects/${_id}`);
+        await axios.delete(`${BASE_URL}/api/projects/${_id}`);
         setProjects(projects.filter((project) => project._id !== _id));
       } catch (err) {
         console.error('Error deleting project:', err);
@@ -80,7 +81,7 @@ const AdminProjectsPage: React.FC = () => {
   // Toggle project publish status
   const handleTogglePublish = async (_id: string, published: boolean) => {
     try {
-      const response = await axios.patch(`/api/projects/${_id}`, { published: !published });
+      const response = await axios.patch(`${BASE_URL}/api/projects/${_id}`, { published: !published });
       setProjects(
         projects.map((project) =>
           project._id === _id ? { ...project, published: !published } : project

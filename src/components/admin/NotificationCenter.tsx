@@ -1,5 +1,6 @@
 'use client';
 
+import { BASE_URL } from '@/app/baseUrl';
 import { useState, useEffect } from 'react';
 
 interface Notification {
@@ -18,7 +19,7 @@ export default function NotificationCenter() {
 
   useEffect(() => {
     // Connect to the server-sent events endpoint
-    const eventSource = new EventSource('/api/notifications/subscribe');
+    const eventSource = new EventSource(`${BASE_URL}/api/notifications/subscribe`);
     
     eventSource.onopen = () => {
       setConnected(true);

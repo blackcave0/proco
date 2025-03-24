@@ -7,6 +7,7 @@ import AdminHeader from '@/components/admin/AdminHeader';
 import InquiriesTable from '@/components/admin/InquiriesTable';
 import CoursesTable from '@/components/admin/CoursesTable';
 import PortfolioAdmin from './_components/Admin-Portfolio';
+import { BASE_URL } from '../baseUrl';
 
 interface Inquiry {
   _id: string;
@@ -61,7 +62,7 @@ export default function AdminDashboard() {
   // Check API connection
   const checkApiConnection = useCallback(async () => {
     try {
-      await axios.get('/api/health');
+      await axios.get(`${BASE_URL}/api/health`);
       setApiConnected(true);
       return true;
     } catch (err) {
@@ -75,7 +76,7 @@ export default function AdminDashboard() {
   const fetchInquiries = useCallback(async () => {
     try {
       setIsLoading(true);
-      const response = await axios.get('/api/inquiries');
+      const response = await axios.get(`${BASE_URL}/api/inquiries`);
       setInquiries(response.data.data);
       setLastUpdate(new Date());
       setError(null);
@@ -92,7 +93,7 @@ export default function AdminDashboard() {
   // Fetch courses function
   const fetchCourses = useCallback(async () => {
     try {
-      const response = await axios.get('/api/courses');
+      const response = await axios.get(`${BASE_URL}/api/courses`);
       setCourses(response.data.data);
       setApiConnected(true);
     } catch (err) {
@@ -122,7 +123,7 @@ export default function AdminDashboard() {
         // Set up SSE for real-time updates
         let eventSource: EventSource | null = null;
         try {
-          eventSource = new EventSource('/api/notifications/subscribe');
+          eventSource = new EventSource(`${BASE_URL}/api/notifications/subscribe`);
           
           eventSource.onopen = () => {
             console.log('SSE connection established');
@@ -224,7 +225,7 @@ export default function AdminDashboard() {
 
   const handleStatusChange = async (id: string, status: 'new' | 'pending' | 'completed') => {
     try {
-      const response = await axios.patch(`/api/inquiries/${id}/status`, { status });
+      const response = await axios.patch(`${BASE_URL}/api/inquiries/${id}/status`, { status });
       
       // Update the inquiry in the local state (this will be overridden by SSE if it's working)
       setInquiries(prevInquiries => 
@@ -246,7 +247,7 @@ export default function AdminDashboard() {
   const handleDeleteInquiry = async (id: string) => {
     if (window.confirm('Are you sure you want to delete this inquiry?')) {
       try {
-        await axios.delete(`/api/inquiries/${id}`);
+        await axios.delete(`${BASE_URL}/api/inquiries/${id}`);
         
         // Update the local state (this will be overridden by SSE if it's working)
         setInquiries(prevInquiries => prevInquiries.filter(inquiry => inquiry._id !== id));
